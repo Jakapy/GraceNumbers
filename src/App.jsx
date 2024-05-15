@@ -57,7 +57,7 @@ export default function App() {
 
   async function getCountries() {
     const response = await fetch(
-      "https://restcountries.com/v3.1/all?fields=name,flag,flags,region,borders,landlocked",
+      "https://restcountries.com/v3.1/all?fields=name,flag,flags,region,borders,landlocked,capital",
     );
     const data = await response.json();
     setCountries(data);

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 
 export function Country(props) {
-  const { flag, name, flags } = props.data;
+  const { flag, name, flags, capital } = props.data;
   return (
     <>
       <Card>
@@ -21,6 +21,10 @@ export function Country(props) {
         <CardContent>
           <img src={flags.png}></img>
         </CardContent>
+        <CardFooter>
+          <div>Glavno mesto:</div>
+          <ul></ul>
+        </CardFooter>
       </Card>
     </>
   );
