@@ -25,6 +25,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Vaja from "./Vaja.jsx";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 
 export default function App() {
   const [fact, setFact] = useState({});
@@ -38,7 +40,8 @@ export default function App() {
     "green",
   ]);
   const [region, setRegion] = useState("Europe");
-  const [landlocked, setLandlocked] = useState("true");
+  const [landlocked, setLandlocked] = useState(true);
+  const [borders, setBorders] = useState(1);
 
   async function getRandomFact(number) {
     const response = await fetch("http://numbersapi.com/random?json");
@@ -71,35 +74,66 @@ export default function App() {
 
   return (
     <>
-      <h1>Države</h1>
-      <h3 className="">Izbira regije: {region}</h3>
-      <div className="grid grid-cols-3 gap-2">
-        <Select onValueChange={(value) => setRegion(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Region" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="Europe">Europe</SelectItem>
-            <SelectItem value="Asia">Asia</SelectItem>
-            <SelectItem value="Americas">America</SelectItem>
-            <SelectItem value="Africa">Africa</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="container">
+        <h1>Države</h1>
+        <h3 className="">Izbira regije:</h3>
+        <div className="grid grid-cols-3 gap-2">
+          <Card className="width-64px">
+            <Select onValueChange={(value) => setRegion(value)}>
+              <SelectTrigger className="">
+                <SelectValue placeholder="Region" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="Europe">Europe</SelectItem>
+                <SelectItem value="Asia">Asia</SelectItem>
+                <SelectItem value="Americas">America</SelectItem>
+                <SelectItem value="Africa">Africa</SelectItem>
+              </SelectContent>
+            </Select>
+          </Card>
+          <Card className="width-64px">
+            <CardHeader>
+              <CardTitle>Države brez morja</CardTitle>
+              <CardDescription></CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Checkbox
+                checked={landlocked}
+                onCheckedChange={(value) => setLandlocked(value)}
+              ></Checkbox>
+              Označi, če nima morja
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>Število sosednij držav: {borders}</CardHeader>
+            <CardContent>
+              <Slider
+                onValueChange={(value) => setBorders(value)}
+                defaultValue={[3]}
+                max={10}
+                step={1}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <Carousel className="flex">
+          <CarouselContent>
+            {countries
+              .filter((country) => borders == country.borders.length)
+              .filter((country) => region == "all" || country.region == region)
+              .filter((country) => country.landlocked == landlocked)
+              .map((country) => (
+                <CarouselItem className="basis-1/4">
+                  <Country data={country}></Country>
+                </CarouselItem>
+              ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </div>
-      <Carousel>
-        <CarouselContent>
-          {countries
-            .filter((country) => region == "all" || country.region == region)
-            .map((country) => (
-              <CarouselItem className="basis-1/4">
-                <Country data={country}></Country>
-              </CarouselItem>
-            ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
       {colors.map((color) => (
         <p>{color}</p>
       ))}
